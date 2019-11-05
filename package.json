@@ -1,11 +1,18 @@
 {
   "name": "lbt-obs-time-tracker",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
+    "axios": "^0.19.0",
+    "file-saver": "^2.0.2",
+    "moment": "^2.24.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
+    "react-redux": "^7.1.1",
+    "react-scripts": "3.2.0",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -13,6 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy-igor-dev": "http://localhost/",
   "eslintConfig": {
     "extends": "react-app"
   },

@@ -1,0 +1,17 @@
+.Logo {
+    background-color: white;
+    /*height: 80%;*/
+    height: 100%;  /* since the Logo is used in the toolbar and the
+                    SideDrawer, we could use media queries to set the
+                    height according to different viewports. However since 
+                    the Logo in this case will be used in either the toolbar or
+                    the SideDrawer we can set extra styling to limit the 
+                    Logo height in those components. */
+    padding: 6px;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.Logo img {
+    height: 100%;
+}

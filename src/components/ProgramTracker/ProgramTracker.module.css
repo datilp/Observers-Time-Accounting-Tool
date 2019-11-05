@@ -1,0 +1,19 @@
+.ProgramTracker table {
+    /*z-index:10;*/
+    align-content: left;
+    margin: 5px 0;
+    background-color: transparent;
+    width:100%;
+}
+
+.ProgramTracker {
+    /*z-index: 0;*/
+    flex-flow: column;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+    width: 97%;
+    background-image: linear-gradient(to top, #385af1,#b8e0f0);
+    background-color: #AFF;
+    margin:10px 10px 10px 10px;
+    flex-flow: column;
+}

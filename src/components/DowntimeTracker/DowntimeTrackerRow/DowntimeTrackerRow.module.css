@@ -1,0 +1,20 @@
+/*.DTR .top td {
+    border-top: thin solid black;
+}
+  
+.DTR .bottom td {
+    border-bottom: thin solid black;
+}
+  
+.DTR td:first-child {
+    border-left: thin solid black;
+}
+  
+.DTR td:last-child {
+    border-right: thin solid black;
+}
+*/
+
+.DTR .box {
+    border:solid 1px #555;
+}

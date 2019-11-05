@@ -1,0 +1,48 @@
+.Button {
+    background-color: #ccc;
+    border: 1px solid #999;
+    cursor: pointer;
+    font: inherit;
+    padding: 2px;
+    margin: 2px;
+    font-weight: bold;
+
+    border-radius: 7px;
+    
+    padding: 2px;
+    /*width: 20px;
+    background: #73AD21;
+    height: 15px;*/
+}
+
+.Active {
+    background-color: #1cc;
+}
+
+.Button:first-of-type {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.Success {
+    color: #5C9210;
+}
+
+.Danger {
+    color: #944317;
+}
+
+.Disable {
+    background-color: #ccc;
+    color: #b1a8da;
+}
+
+.Running {
+    background-color: #FFF;
+    color: #08883d;
+}
+
+.Stop {
+    background-color: #f84848;
+    color: black;
+}

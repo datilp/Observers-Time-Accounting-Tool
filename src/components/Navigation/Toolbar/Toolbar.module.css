@@ -1,0 +1,32 @@
+.Toolbar {
+    /* this seeting is for mobile devices */
+    height: 50px;
+    width: 100%;
+    position: fixed; /* so even if we scrool the toolbar remains visible */
+    top: 0;  /* fixed the coordinates to the left corner */
+    left: 0;
+    background-color: #729af0;
+    display: flex; /* flex-box all the items align to each other */
+    justify-content: space-between; /* how the elements are spread out
+                                    the keep the equidinstance between them*/
+    align-items: center; /* vertical alignment */
+    padding: 0 20px; /* 0 padding vertical and 20px left and right*/
+    box-sizing: border-box; /* to make sure the toolbar is size correctly
+                             even with the padding */
+    z-index: 90; /* just below the backdrop */
+
+}
+
+.Toolbar nav {
+    height: 100%; /* in the navigation items expand the whole height of the toolbar */
+}
+
+.Logo {
+    height: 80%;
+}
+
+@media(max-width: 499px) {
+    .DesktopOnly {
+        display: none;
+    }
+}

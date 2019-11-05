@@ -1,0 +1,53 @@
+.NavigationItem {
+    margin: 10px 0; /* some spacing from top to bottom */
+    box-sizing: border-box;
+    display: block;
+    width:100%;
+}
+
+.NavigationItem a {
+    color: #8F5C2C;
+    text-decoration: none; /* so the anchor is not underlined */
+    width: 100%;
+    box-sizing: border-box; /* to make sure the height also includes de padding and the border */
+    display: block; /* so the height has an effect */
+}
+
+.NavigationItem a:hover, /* links over which we hover */
+.NavigationItem a:active, /* links that are active, e.g. clicked on */
+.NavigationItem a.active { /* links that have the active class.
+    E.g. later we like to assigned the active class to a link that matches the current page */
+    color: #40A4C8;
+}
+
+/* We need to adjust this css file for mobile devices, originally we did it for desktop
+   We will use Media queries queries to set the desktop device and the based css for 
+   mobile ones.
+*/
+
+@media(min-width: 500px) {
+    .NavigationItem {
+        margin: 0;
+        display: flex;
+        height:100%;
+        width: auto;
+        align-items: center;
+        
+    }
+    
+    .NavigationItem a {
+        color: white;
+        height: 100%;
+        padding: 16px 10px; /* 16px top/bottom 10px left/rigth */
+        border-bottom: 4px solid transparent;
+    }
+    
+    .NavigationItem a:hover, /* links over which we hover */
+    .NavigationItem a:active, /* links that are active, e.g. clicked on */
+    .NavigationItem a.active { /* links that have the active class.
+        E.g. later we like to assigned the active class to a link that matches the current page */
+        background-color: #8F5C2C;
+        border-bottom: 4px solid #40A4C8;
+        color: white;
+    }
+}
