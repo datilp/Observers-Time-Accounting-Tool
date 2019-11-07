@@ -8,7 +8,6 @@ import Timer from "../../Timer/Timer";
 import * as actionTypes from "../../../store/actions/actionTypes";
 import {getDate} from "../../../utility";
 import * as actionCreators from "../../../store/actions/index";
-//import moment from "moment";
 
 class DowntimeTrackerRow extends Component {
   state = {
@@ -16,6 +15,12 @@ class DowntimeTrackerRow extends Component {
     };
 
   startClock = (props) => {
+    //if the night has ended disable buttons
+    if (props.appState.isEndOfNight  
+    && props.binType !== actionTypes.CALIBRATION) {
+      return null;
+    }
+
     this.setState({startTimer: true});
     return props.startTimer(props.binType);
   }
@@ -87,7 +92,8 @@ const mapStateToProps = state => {
   return {
     dwt: state.downtime,
     nights: state.nights,
-    totals: state.totals
+    totals: state.totals,
+    appState: state.appState
   };
 };
 

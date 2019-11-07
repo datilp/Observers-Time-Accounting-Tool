@@ -22,10 +22,6 @@ class Modal extends Component {
 
   }
 
-  componentDidUpdate () {
-    console.log("[Modal] DidUpdate");
-  }
-
   render() {
     //style={props.purchasing? {transform: "translateY(0)"}: {transform: "translateY(-100vh)"} }>
     return (

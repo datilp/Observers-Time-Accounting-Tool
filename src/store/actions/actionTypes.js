@@ -62,3 +62,6 @@ export const FETCH_STATE_ERROR = 'FETCH_STATE_ERROR';
 export const START_NTIMER = 'START_NTIMER';
 export const STOP_NTIMER = 'STOP_NTIMER';
 export const RESET_NTIMER = 'RESET_NTIMER';
+
+
+export const UPDATE_APP_STATE = 'UPDATE_APP_STATE';

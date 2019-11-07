@@ -62,7 +62,7 @@ export const prgBinStopAction = (thisBin) => {
                 dispatch(binStopDispatch(programs.currentProgramID));
                 //calculates Open Shutter Tonight Time
                 dispatch(actionCreators.updateOSTNTimeAction(nights.nights[nights.current].start,
-                                                            nights.nights[nights.current].length));
+                                                            nights.nightEnd));
                 //calculate totals on old bin
                 dispatch(actionCreators.prgUpdateTotalsAction(programs.currentProgramID));
                 //persists state

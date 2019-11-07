@@ -15,12 +15,13 @@ class NavigationItems extends Component {
         }
         <NavigationItem link="/" btnClicked={this.props.saveStateToFile} active>Download State</NavigationItem>
         <label>&nbsp;</label>
-        <label><b>{"Night: " + this.props.nights.current}</b></label>
+        <label><b>{"Night: " + this.props.nights.current + this.props.nights.nightEnd}</b></label>
     </ul>
     );
 
     }
 }
+
 
 const mapStateToProps = state => {
     return {
@@ -31,7 +32,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         saveStateToFile: () => {
-            console.log("hell");
             dispatch(actionCreators.saveStateToFile());
         }
     };

@@ -14,6 +14,12 @@ class ProgramTrackerRow extends Component {
   };
 
 startClock = (props) => {
+
+  //if the night has ended disable buttons
+  if (props.appState.isEndOfNight) { 
+    return null;
+  }
+
   this.setState({startTimer: true});
   //console.log("actionTypeStart:", props.actionTypeStart);
   return props.startTimer(props.pid);
@@ -89,7 +95,8 @@ const mapStateToProps = state => {
   return {
     nights: state.nights,
     prog: state.programs.programs,
-    totals: state.totals
+    totals: state.totals,
+    appState: state.appState
   };
 };
 
@@ -104,16 +111,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-/*const mapDispatchToProps = dispatch => {
-  return {
-    startTimer: (type, key) => {
-      dispatch(actionCreators.timerAction(type, key))
-      //dispatch(actionCreators.testAction())
-    },
-
-    startTimer2: (type) => dispatch(actionCreators.timerAction(type)),
-    stopTimer: (type, key) => dispatch(actionCreators.timerAction(type, key))
-  };
-};
-*/
 export default connect(mapStateToProps, mapDispatchToProps)(ProgramTrackerRow);

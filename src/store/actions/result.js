@@ -25,7 +25,7 @@ export const saveState = ( res ) => {
     return (dispatch, getState) => {
             var blob = new Blob([JSON.stringify(getState())], {type: "text/json;charset=utf-8"});
             fileSaver.saveAs(blob, "hello_world.txt");
-            console.log("in saveState:", getState());
+            //console.log("in saveState:", getState());
             dispatch(saveDispatch());
     }
 };
@@ -34,7 +34,7 @@ export const storeResult = ( res ) => {
     return (dispatch, getState) => {
         setTimeout( () => {
             // const oldCounter = getState().ctr.counter;
-            console.log("in storeResult:", getState());
+            //console.log("in storeResult:", getState());
             dispatch(saveResult(res));
         }, 2000 );
     }

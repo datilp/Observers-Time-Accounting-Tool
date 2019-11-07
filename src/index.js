@@ -12,8 +12,8 @@ import instance from './axiosInstance';
 import downtimeReducer from './store/reducers/downtime';
 import nightsReducer from './store/reducers/nights';
 import totalsReducer from './store/reducers/totals';
-
 import progReducer from './store/reducers/programs';
+import appStateReducer from './store/reducers/appState';
 
 import * as actionTypes from './store/actions/actionTypes';
 import fileSaver from 'file-saver';
@@ -47,7 +47,8 @@ const rootReducer = combineReducers({
     downtime: downtimeReducer,
     nights: nightsReducer,
     totals: totalsReducer,
-    programs: progReducer
+    programs: progReducer,
+    appState: appStateReducer
     //hist: historyReducer,
 });
 
@@ -190,7 +191,7 @@ const persister = store => {
         }
     }
 };
-
+/*
 const timeKeeper = store => {
     return next => {
         
@@ -222,6 +223,7 @@ const timeKeeper = store => {
                 key:programID});
             }
             return next(action);
+            */
             /*
             
 //            console.log('[Middleware] persister ', action, store.getState());
@@ -244,9 +246,11 @@ const timeKeeper = store => {
             }
             return result;
             */
+           /*
         }
     }
 };
+*/
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

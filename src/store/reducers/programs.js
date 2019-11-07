@@ -7,13 +7,6 @@ const init = {
     currentProgramID: null,
     bins: {},
     list: []
-      /*{ id: "AZ-2019B-147", pi: "Smith" },
-      { id: "AZ-2019B-006", pi: "Volk" },
-      { id: "AZ-2019B-027", pi: "Egami" },
-      { id: "AZ-2019B-024", pi: "Yang" },
-      { id: "AZ-2019B-023", pi: "Lindquist" },
-      { id: "AZ-2019B-019", pi: "McMillan" }
-    ]*/
   }
 };
 
@@ -38,51 +31,6 @@ const getNewState = (state, action) => {
       bins: { ...state.programs.bins }
     }
   };
-
-
-  //if currentInterval is not null
-  //means that it is ongoing and we need to stop it,
-  // added it to the correct bucket
-  // and create a new one.
-  if (newState.programs.currentInterval != null) {
-    newState.programs.currentInterval = { ...state.programs.currentInterval };
-    newState.programs.currentInterval.stoptime = new Date();
-    //at this point the currentInterval is the previous interval
-    //TODO do it in anotherway
-    var old_bin = state.programs.currentProgramID;
-
-    let newBin =
-      newState.programs.bins[old_bin] == null
-        ? { [old_bin]: { interval: [], tonightTime: 0, totaltime: 0 } }
-        : {
-            [old_bin]: {
-              ...newState.programs.bins[old_bin],
-              interval: newState.programs.bins[old_bin].interval.slice()
-            }
-          };
-
-    newState.programs.bins = { ...newState.programs.bins, ...newBin };
-
-    /*newState.programs.bins[old_bin] =
-      newState.programs.bins[old_bin] == null
-        ? { interval: [], tonightTime: 0, totaltime: 0 }
-        : newState.programs.bins[old_bin];*/
-
-    newState.programs.bins[old_bin].interval.push(
-      newState.programs.currentInterval
-    );
-
-    var tonightTime = 0.0;
-    newState.programs.bins[old_bin].interval.forEach(interval => {
-      if (interval.stoptime != null) {
-        tonightTime +=
-          getDate(interval.stoptime).getTime() -
-          getDate(interval.starttime).getTime();
-      }
-    });
-    newState.programs.bins[old_bin].tonightTime = tonightTime;
-    //TODO totalTime
-  }
 
   newState.programs.currentInterval = {
     starttime: new Date(),
@@ -135,13 +83,6 @@ const endIntervalState = (state, action) => {
 
     newState.programs.bins[old_bin].interval.push(
         newState.programs.currentInterval);
-    /*newState.programs.bins[action.key] =
-      newState.programs.bins[action.key] == null
-        ? { interval: [], tonightTime: 0, totaltime: 0 }
-        : newState.programs.bins[action.key];
-    newState.programs.bins[action.key].interval.push(
-      newState.programs.currentInterval
-    );*/
 
     var tonightTime = 0.0;
     newState.programs.bins[action.key].interval.forEach(interval => {

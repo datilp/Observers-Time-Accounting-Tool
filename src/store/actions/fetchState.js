@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
 import instance from '../../axiosInstance';
+import {nightEnd, nightLenTillNow} from '../../utility';
+
 function fetchStatePending() {
     //console.log("in fetchStatePending");
     return {
@@ -14,10 +16,12 @@ function fetchStateSuccess(state) {
     }
 }
 
-function fetchDowntimeStateSuccess(downtime) {
+function fetchDowntimeStateSuccess(downtime,nightStart, nightEnd) {
     return {
         type: actionTypes.FETCH_DWNTIME_STATE_SUCCESS,
-        state: downtime
+        state: downtime,
+        nightStart,
+        nightEnd
     }
 }
 
@@ -29,10 +33,11 @@ function fetchNightsStateSuccess(nights) {
 }
 
 
-function fetchTotalsStateSuccess(totals) {
+function fetchTotalsStateSuccess(totals, nightLenTillNow) {
     return {
         type: actionTypes.FETCH_TOTALS_STATE_SUCCESS,
-        state: totals
+        state: totals,
+        nightLenTillNow
     }
 }
 
@@ -44,6 +49,14 @@ function fetchProgramsStateSuccess(programs) {
         state: programs
     }
 }
+
+function fetchAppStateSuccess(nightEnd) {
+    return {
+        type: actionTypes.UPDATE_APP_STATE,
+        nightEnd
+    }
+}
+
 
 /*function fetchResStateSuccess(res) {
     return {
@@ -109,7 +122,7 @@ function fetchStateAction() {
             if (res==null) {
                 return null;
             } 
-            
+
             if(res.error) {
                 console.log("Error fetching json:", res);
                 throw(res.error);
@@ -118,10 +131,21 @@ function fetchStateAction() {
 
             dispatch(fetchStateSuccess(res.data));
             //console.log("fetching:", res.data);
-            dispatch(fetchNightsStateSuccess(res.data.nights));            
-            dispatch(fetchTotalsStateSuccess(res.data.totals));           
-            dispatch(fetchDowntimeStateSuccess(res.data.downtime));
+
+            //calculating nights end.
+            const nights = res.data.nights;
+            //console.log("fetch:", nights);
+            const nightLen = nights.nights[nights.current].length;
+            const nightStart = nights.nights[nights.current].start;
+            nights.nightEnd = nightEnd(nightStart, nightLen);
+            dispatch(fetchAppStateSuccess(nights.nightEnd));
             dispatch(fetchProgramsStateSuccess(res.data.programs));
+            dispatch(fetchDowntimeStateSuccess(res.data.downtime, 
+                nights.nights[nights.current].start, 
+                nights.nightEnd));
+            dispatch(fetchNightsStateSuccess(res.data.nights));            
+            dispatch(fetchTotalsStateSuccess(res.data.totals,
+                nightLenTillNow(nights)));           
 
             //dispatch(fetchResStateSuccess(res.res));
 

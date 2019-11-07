@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const updateObject = (oldObject, updatedValues) => {
     return {
         ...oldObject,
@@ -21,4 +23,60 @@ export const getDate = (date) => {
       //console.log("Date:[Date]", newDate.getTime());
       return newDate;
     }
-  }; 
+  };
+
+
+export const isNightEnded2 = (nightStart, nightLen) => {
+  const nightEnd = moment(nightStart).add(nightLen, 'hours').toDate();
+  return nightEnd < new Date();
+}
+
+export const isNightEnded3 = (nights) => {
+  if (nights == null) {
+    return false;
+  }
+  const nightStart = nights.nights[nights.current].start;
+  const nightLen = nights.nights[nights.current].length;
+
+  const nightEnd = moment(nightStart).add(nightLen, 'hours').toDate();
+  return nightEnd < new Date();
+}
+
+export const isNightEnded = (nightEnd) => {
+  return nightEnd < new Date();
+}
+
+export const nightEnd = (nightStart, nightLen)  => {
+    return moment(nightStart).add(nightLen, 'hours').toDate();
+}
+
+export const nightLenTillNow = (nights) => {
+  //calculate length of nights so far
+  var totalNightsLenTillYesterday = 0;
+  
+  Object.keys(nights.nights).forEach( key => {
+      if (key < nights.current) {
+          //console.log("dwnUpdateTotalsAction1:", key, nights.current, nights.nights[key]);
+          totalNightsLenTillYesterday += parseFloat(nights.nights[key].length);
+      }
+  })
+
+  // Today's night finishes by the end of the night.
+  const nightStart = nights.nights[nights.current].start;
+  const nightLen = nights.nights[nights.current].length;
+  const nightEnd = moment(nightStart)
+  .add(nightLen, "hours")
+  .toDate();
+
+  //if the night is done set the current night time to end of night
+  const nightCurrentTime = (nightEnd < new Date())? nightEnd: new Date();
+
+  //calculate tonight time based on nightEnd if reached.
+  var tonight = (nightCurrentTime - getDate(nightStart))/(1000*60*60);
+
+  /*console.log("dwnUpdateTotalsAction:", 
+              totalNightsLenTillYesterday,
+              tonight,
+              totalNightsLenTillYesterday + tonight);*/
+  return  totalNightsLenTillYesterday + tonight;
+}
