@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
 import { getDate } from '../../utility';
+import moment from "moment";
+
 
 export const updateTotalsDispatch = (key, deltatime, ostime) => {
    return {
@@ -10,7 +12,7 @@ export const updateTotalsDispatch = (key, deltatime, ostime) => {
     };
 }
 
-const calculateNightsLenTillNow = (nights, downtime) => {
+const calculateNightsLenTillNow = (nights) => {
         //calculate length of nights so far
         var totalNightsLenTillYesterday = 0;
         
@@ -21,7 +23,18 @@ const calculateNightsLenTillNow = (nights, downtime) => {
             }
         })
 
-        var tonight = (new Date() - getDate(nights.nights[nights.current].start))/(1000*60*60);
+        // Today's night finishes by the end of the night.
+        const nightStart = nights.nights[nights.current].start;
+        const nightLen = nights.nights[nights.current].length;
+        const nightEnd = moment(nightStart)
+        .add(nightLen, "hours")
+        .toDate();
+
+        //if the night is done set the current night time to end of night
+        const nightCurrentTime = (nightEnd < new Date())? nightEnd: new Date();
+
+        //calculate tonight time based on nightEnd if reached.
+        var tonight = (nightEnd - getDate(nightStart))/(1000*60*60);
 
         /*console.log("dwnUpdateTotalsAction:", 
                     totalNightsLenTillYesterday,
@@ -47,14 +60,13 @@ export const dwnUpdateTotalsAction = (thisBin) => {
 export const prgUpdateTotalsAction = (thisBin) => {
     return (dispatch, getState) => {
         const nights = getState().nights;
-        const {downtime} = getState().downtime;
 
         const interval = getState().programs.programs.bins[thisBin].interval[
             getState().programs.programs.bins[thisBin].interval.length -1
         ];
         var deltatime = (getDate(interval.stoptime) - getDate(interval.starttime));
         //console.log("[updateTotalsAction]", actionTypes.UPDATE_TOTALS, deltatime);
-        dispatch(updateTotalsDispatch(thisBin, deltatime, calculateNightsLenTillNow(nights,downtime)));
+        dispatch(updateTotalsDispatch(thisBin, deltatime, calculateNightsLenTillNow(nights)));
 
         //dispatch(updateTotalsDispatch(thisBin, deltatime));
     };

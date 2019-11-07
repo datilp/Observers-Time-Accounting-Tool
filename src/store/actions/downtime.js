@@ -15,18 +15,20 @@ export const binStartDispatch = (key) => {
     };
 };
 
-export const binStopDispatch = (key, nightStart) => {
+export const binStopDispatch = (key, nightStart, nightLen) => {
     return {
         type: actionTypes.BIN_STOP,
         key: key,
-        nightStart
+        nightStart,
+        nightLen
     };
 };
 
-export const updateOSTNTimeAction = (nightStart) => {
+export const updateOSTNTimeAction = (nightStart,nightLen) => {
     return {
         type: actionTypes.CALC_OS_TNTIME,
-        nightStart
+        nightStart,
+        nightLen
     }
 };
 
@@ -40,7 +42,7 @@ export const dwnBinStartAction = (thisBin) => {
             //stop old bin in downtime
             dispatch(actionCreators.prgBinStopAction(programs.currentProgramID));
         }
-        
+
         // if currentInterval is set and currentBin is different from
         // passed in bin (thisBin) then it means there is a bin running somewhere
         // stop it and start this bin
@@ -73,7 +75,9 @@ export const dwnBinStopAction = (thisBin) => {
         if (downtime.currentInterval != null &&
             downtime.currentBin === thisBin) {
                 //stop old bin
-                dispatch(binStopDispatch(downtime.currentBin, nights.nights[nights.current].start));
+                dispatch(binStopDispatch(downtime.currentBin, 
+                    nights.nights[nights.current].start,
+                    nights.nights[nights.current].length));
                 //calculate totals on old bin
                 dispatch(actionCreators.dwnUpdateTotalsAction(downtime.currentBin));
                 //persists state

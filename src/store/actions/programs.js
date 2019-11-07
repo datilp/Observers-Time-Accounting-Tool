@@ -27,7 +27,7 @@ export const prgBinStartAction = (thisBin) => {
             //stop old bin in downtime
             dispatch(actionCreators.dwnBinStopAction(downtime.currentBin));
         }
-        
+
         // if currentInterval is set and currentProgramID is different from
         // passed in programID (thisBin) then it means there is a programID
         // running somewhere stop it and start this bin
@@ -61,7 +61,8 @@ export const prgBinStopAction = (thisBin) => {
                 //stop old bin
                 dispatch(binStopDispatch(programs.currentProgramID));
                 //calculates Open Shutter Tonight Time
-                dispatch(actionCreators.updateOSTNTimeAction(nights.nights[nights.current].start));
+                dispatch(actionCreators.updateOSTNTimeAction(nights.nights[nights.current].start,
+                                                            nights.nights[nights.current].length));
                 //calculate totals on old bin
                 dispatch(actionCreators.prgUpdateTotalsAction(programs.currentProgramID));
                 //persists state

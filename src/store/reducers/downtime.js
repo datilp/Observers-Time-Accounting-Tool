@@ -1,5 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 import { getDate } from "../../utility";
+import moment from "moment";
 
 const init = {
   downtime: {
@@ -140,7 +141,7 @@ const endIntervalState = (state, action) => {
   return newState;
 };
 
-const calculateOSTonightTime = (state, nightStart)  => {
+const calculateOSTonightTime = (state, nightStart, nightLen)  => {
   var todaysDwnTonightTime = 0;
   //tonightTime is in seconds
   Object.keys(state.downtime.bins).filter( 
@@ -160,8 +161,15 @@ const calculateOSTonightTime = (state, nightStart)  => {
       tonightTime: 0.0
     }}
   }
+
+  //calculate tonight OpenShutter time based on end of night
+  //if current time is later than end of night then use end of night (nightEnd)
+  const nightEnd = moment(nightStart).add(nightLen, 'hours').toDate();
+  const nowDate = nightEnd < new Date()? nightEnd: new Date();
+  //console.log("OSTonightTime:", nightEnd, nowDate, getDate(nightStart));
+
   state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime = 
-          (new Date() - getDate(nightStart)) - todaysDwnTonightTime;
+          (nowDate - getDate(nightStart)) - todaysDwnTonightTime;
 
 }
 
@@ -176,7 +184,7 @@ const reducer = (state = init, action) => {
       return newState;
     case actionTypes.BIN_STOP:
       newState = endIntervalState(state, action);
-      calculateOSTonightTime(newState, action.nightStart);
+      calculateOSTonightTime(newState, action.nightStart, action.nightLen);
       //console.log("DOWNTIME STOP:",newState);
       return newState;
     case actionTypes.FETCH_DWNTIME_STATE_SUCCESS:
@@ -190,7 +198,7 @@ const reducer = (state = init, action) => {
           bins: { ...state.downtime.bins }
         }
       };
-      calculateOSTonightTime(newState, action.nightStart);
+      calculateOSTonightTime(newState, action.nightStart, action.nightLen);
 
       return newState;
     case actionTypes.TEST_ACTION:

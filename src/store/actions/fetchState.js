@@ -106,6 +106,10 @@ function fetchStateAction() {
             console.log("in fetch got json:", res);
             return res.json();})*/
         .then(res => {
+            if (res==null) {
+                return null;
+            } 
+            
             if(res.error) {
                 console.log("Error fetching json:", res);
                 throw(res.error);
