@@ -98,21 +98,25 @@ const calculateOSTonightTime = (state, nightStart, nightEnd)  => {
   var newBin = null;
   if (state.downtime.bins[actionTypes.OPENSHUTTER] == null) {
     newBin = { [actionTypes.OPENSHUTTER]: {"tonightTime":0.0}};
-    state.downtime.bins = { ...state.downtime.bins, ...newBin};
   } else {
     newBin = { [actionTypes.OPENSHUTTER]: {
       ...state.downtime.bins[actionTypes.OPENSHUTTER],
       tonightTime: 0.0
     }}
   }
+  state.downtime.bins = { ...state.downtime.bins, ...newBin};
 
   //calculate tonight OpenShutter time based on end of night
   //if current time is later than end of night then use end of night (nightEnd)
   const nowDate = nightEnd < new Date()? nightEnd: new Date();
-  //console.log("OSTonightTime:", nightEnd, nowDate, getDate(nightStart));
 
   state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime = 
           (nowDate - getDate(nightStart)) - todaysDwnTonightTime;
+          
+  //console.log("OSTonightTime:", nightEnd, nowDate, 
+  //    getDate(nightStart), todaysDwnTonightTime,
+  //    state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime);
+  
 }
 
 const reducer = (state = init, action) => {

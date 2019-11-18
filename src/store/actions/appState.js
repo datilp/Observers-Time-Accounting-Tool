@@ -1,10 +1,11 @@
 import * as actionTypes from './actionTypes';
 import * as actionCreators from "../../store/actions/index";
 
-export const appStateUpdateAction = (nightEnd) => {
+export const appStateUpdateAction = (nightEnd,nightStart) => {
     return {
         type: actionTypes.UPDATE_APP_STATE,
-        nightEnd
+        nightEnd,
+        nightStart
     };
 }
 export const appStateUpdateDispatch = ( ) => {
@@ -13,7 +14,7 @@ export const appStateUpdateDispatch = ( ) => {
         const nights = state0.nights;
 
         //console.log("appStateUpdateDispatch:", state0.appState);
-        dispatch(appStateUpdateAction(nights.nightEnd));
+        dispatch(appStateUpdateAction(nights.nightEnd, nights.nights[nights.current].start));
         const state1 = getState();
         //console.log("appStateUpdateDispatch2:", state1.appState);
 
@@ -21,7 +22,7 @@ export const appStateUpdateDispatch = ( ) => {
         //there are timers running, dispatch stop actions
         if (state0.appState.isEndOfNight !== state1.appState.isEndOfNight) {
             //console.log(state1.programs.programs);
-            //check if there is something that needs to be stop
+            //check if there is something that needs to be stopped
             // except calibrations
             if (state1.downtime.downtime.currentInterval != null &&
                 state1.downtime.downtime.currentBin !== actionTypes.CALIBRATION) {
@@ -33,6 +34,10 @@ export const appStateUpdateDispatch = ( ) => {
                 //console.log("dispatching prgBinStopAction", state1.programs.programs.currentProgramID);
                 dispatch(actionCreators.prgBinStopAction(state1.programs.programs.currentProgramID));
             }
+        }
+
+        if (state0.appState.isStartOfNight === false && state1.appState.isStartOfNight === true) {
+            dispatch(actionCreators.prgBinStopAction(state1.programs.programs.currentProgramID));            
         }
     }
 };

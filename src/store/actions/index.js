@@ -22,3 +22,7 @@ export {
     dwnUpdateTotalsAction,
     prgUpdateTotalsAction
 } from './totals';
+
+export {
+    appStateUpdateAction
+} from './appState';

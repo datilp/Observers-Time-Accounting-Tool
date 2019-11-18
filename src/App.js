@@ -20,7 +20,7 @@ class App extends Component {
     this.props.fetchState();
 
     this.endOfNightTimer = setInterval( () => 
-    this.props.isNightEnded(), 10000);
+    {this.props.hasNightEnded()}, 10000);
   }
   
   componentWillUnmount() {
@@ -33,7 +33,7 @@ class App extends Component {
     this.props.fetchState();
 
     this.endOfNightTimer = setInterval( () => 
-    this.props.isNightEnded(), 10000);
+    this.props.hasNightEnded(), 10000);
 
   }*/
   render() {
@@ -48,7 +48,7 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchState: fetchStateAction,
-  isNightEnded: appStateUpdateDispatch
+  hasNightEnded: appStateUpdateDispatch
 }, dispatch)
 
 export default connect(null, mapDispatchToProps)(withErrorHandler(App, instance));

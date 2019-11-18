@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as actionTypes from './store/actions/actionTypes';
 
 export const updateObject = (oldObject, updatedValues) => {
     return {
@@ -26,12 +27,12 @@ export const getDate = (date) => {
   };
 
 
-export const isNightEnded2 = (nightStart, nightLen) => {
+export const hasNightEnded2 = (nightStart, nightLen) => {
   const nightEnd = moment(nightStart).add(nightLen, 'hours').toDate();
   return nightEnd < new Date();
-}
+};
 
-export const isNightEnded3 = (nights) => {
+export const hasNightEnded3 = (nights) => {
   if (nights == null) {
     return false;
   }
@@ -40,15 +41,19 @@ export const isNightEnded3 = (nights) => {
 
   const nightEnd = moment(nightStart).add(nightLen, 'hours').toDate();
   return nightEnd < new Date();
-}
+};
 
-export const isNightEnded = (nightEnd) => {
-  return nightEnd < new Date();
-}
+export const hasNightEnded = (nightEnd) => {
+  return getDate(nightEnd) < new Date();
+};
+
+export const hasNightStarted = (nightStart) => {
+  return getDate(nightStart) < new Date();
+};
 
 export const nightEnd = (nightStart, nightLen)  => {
     return moment(nightStart).add(nightLen, 'hours').toDate();
-}
+};
 
 export const nightLenTillNow = (nights) => {
   //calculate length of nights so far
@@ -79,4 +84,22 @@ export const nightLenTillNow = (nights) => {
               tonight,
               totalNightsLenTillYesterday + tonight);*/
   return  totalNightsLenTillYesterday + tonight;
-}
+};
+
+export const isOpenShutterOn = (downtime, hasNightEnded) => {
+  //console.log(downtime.currentBin, hasNightEnded);
+  if ( downtime.currentBin != null 
+    &&
+    [
+      actionTypes.WEATHERLOSS,
+      actionTypes.TECHDOWNTIME,
+      actionTypes.POORWTHPROG
+    ].includes(downtime.currentBin)
+    && !hasNightEnded) {
+    return false;
+  } else if (!hasNightEnded) {
+    return true;
+  } else {
+    return false;
+  }
+};

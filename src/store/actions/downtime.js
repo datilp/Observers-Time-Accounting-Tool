@@ -36,6 +36,8 @@ export const dwnBinStartAction = (thisBin) => {
     return (dispatch, getState) => {
         const {downtime} = getState().downtime;
         const {programs} = getState().programs;
+        const nights = getState().nights;
+
 
         // check if there is program running if so stop it.
         if (programs.currentInterval != null) {
@@ -59,6 +61,8 @@ export const dwnBinStartAction = (thisBin) => {
                 //start this bin
                 //console.log("start new bin2");
                 dispatch(binStartDispatch(thisBin));
+                dispatch(actionCreators.updateOSTNTimeAction(nights.nights[nights.current].start,
+                    nights.nightEnd));
                 //persists state
                 dispatch(actionCreators.persistState());
 

@@ -19,6 +19,8 @@ export const prgBinStartAction = (thisBin) => {
     return (dispatch, getState) => {
         const {downtime} = getState().downtime;
         const {programs} = getState().programs;
+        const nights = getState().nights;
+
 
         //console.log("prgBinStartAction:", getState());
 
@@ -43,6 +45,9 @@ export const prgBinStartAction = (thisBin) => {
         } else if (programs.currentProgramID == null) {
             //start this bin
             dispatch(binStartDispatch(thisBin));
+            dispatch(actionCreators.updateOSTNTimeAction(nights.nights[nights.current].start,
+                nights.nightEnd));
+
             //persists state
             dispatch(actionCreators.persistState());
 

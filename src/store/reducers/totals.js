@@ -27,6 +27,7 @@ const updateOpenShutterTotalTime = (state, nightLen) => {
 const reducer = (state = init, action) => {
   let newState = null;
   //console.log("action.type is:", action.type);
+  //console.log(state);
   switch (action.type) {
     case actionTypes.UPDATE_TOTALS:
       newState = { ...state, running_totals: { ...state.running_totals } };
@@ -39,7 +40,7 @@ const reducer = (state = init, action) => {
 
       newState.running_totals[action.key] +=
         deltatime / (1000 * 60 * 60);
-
+      
       updateOpenShutterTotalTime(newState, action.ostime);
       //console.log("TOTALS:", action.ostime, action.deltatime, state, newState);
       return newState;

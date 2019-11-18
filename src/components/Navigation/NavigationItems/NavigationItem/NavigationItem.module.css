@@ -6,9 +6,11 @@
 }
 
 .NavigationItem a {
-    color: #8F5C2C;
+    color: rgb(13, 72, 199);
+    /*    color: #8F5C2C;*/
+    /*color: #40A4C8;*/
     text-decoration: none; /* so the anchor is not underlined */
-    width: 100%;
+    width: 80%;
     box-sizing: border-box; /* to make sure the height also includes de padding and the border */
     display: block; /* so the height has an effect */
 }
@@ -46,7 +48,9 @@
     .NavigationItem a:active, /* links that are active, e.g. clicked on */
     .NavigationItem a.active { /* links that have the active class.
         E.g. later we like to assigned the active class to a link that matches the current page */
-        background-color: #8F5C2C;
+        background-color: transparent;
+        /* background-color: #8F5C2C; */
+
         border-bottom: 4px solid #40A4C8;
         color: white;
     }

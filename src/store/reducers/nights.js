@@ -4,9 +4,8 @@ import * as actionTypes from "../actions/actionTypes";
 
 const init = {
   nights:{
-    "20191028-20191029":{"length":"11.22","start":"2019-10-28T17:36:51"},
   },
-  current:"20191028-20191029"
+  current:null
 };
 
 
@@ -17,6 +16,7 @@ const reducer = (state = init, action) => {
   //console.log(state);
   switch (action.type) {
     case actionTypes.FETCH_NIGHTS_STATE_SUCCESS:
+      //console.log("nights reducer:", action.state);
       newState= {...state, ...action.state};
       return newState;
       //return updateObject(state, {nights:{...action.state.nights}});

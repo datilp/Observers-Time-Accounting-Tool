@@ -3,7 +3,8 @@ import classes from "./ProgramTrackerRow.module.css";
 import Button from "../../UI/Button/Button";
 //import cButton from "../../UI/Button/Button.module.css";
 import {connect} from 'react-redux';
-import Timer from "../../Timer/Timer";
+import NTimer from "../../NTimer/NTimer";
+
 //import * as actionTypes from "../../../store/actions/actionTypes";
 import {getDate} from "../../../utility";
 import * as actionCreators from "../../../store/actions/index";
@@ -47,13 +48,21 @@ stopTimer = (props) => {
         </td>
       ];
     }
+    
+    var totalRunningTime = 0.0;
+    if (this.props.totals.running_totals[this.props.pid]!=null) {
+      /*console.log("inside props total " + this.props.pid);*/
+      totalRunningTime = this.props.totals.running_totals[this.props.pid] *60*60;
+    }
+    //          <Timer initSeconds={totalRunningTime} isActive={false}/>
+
     return (
       <tr className={classes.PTR}>
         <td style={{width:"200px"}} key="1">{this.props.rowName}</td>
         <td style={{width:"90px"}} key="2">
            {(this.state.startTimer || this.props.prog.currentInterval !=null) && 
                 this.props.prog.currentProgramID === this.props.pid?
-            <Timer 
+            <NTimer 
               initDate={getDate(this.props.prog.currentInterval.starttime)} 
               isActive={true}/>
             : null}
@@ -62,13 +71,15 @@ stopTimer = (props) => {
         {button}
         {/* Tonight(h) */}
         <td key="5" className={classes.box}>
-          <label>{parseFloat(tonightTime).toFixed(3)}</label>
+          <label>
+            <NTimer initSeconds={tonightTime*60*60} isActive={false}/>
+          </label>
         </td>
         {/* Total(h) %*/}
         <td key="6" className={classes.box}>
-          <label>{this.props.totals.running_totals[this.props.pid]==null? "0.0":
-          parseFloat(this.props.totals.running_totals[this.props.pid])
-          .toFixed(3)}</label>
+        <label>
+           <NTimer initSeconds={totalRunningTime} isActive={false}/>
+        </label>
         </td>
         {/*<td key="7" className={classes.box}>
           <label></label>

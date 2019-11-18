@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import * as actions from './index';
 import instance from '../../axiosInstance';
 import {nightEnd, nightLenTillNow} from '../../utility';
 
@@ -32,7 +33,6 @@ function fetchNightsStateSuccess(nights) {
     }
 }
 
-
 function fetchTotalsStateSuccess(totals, nightLenTillNow) {
     return {
         type: actionTypes.FETCH_TOTALS_STATE_SUCCESS,
@@ -41,30 +41,12 @@ function fetchTotalsStateSuccess(totals, nightLenTillNow) {
     }
 }
 
-
-
 function fetchProgramsStateSuccess(programs) {
     return {
         type: actionTypes.FETCH_PROGRAMS_STATE_SUCCESS,
         state: programs
     }
 }
-
-function fetchAppStateSuccess(nightEnd) {
-    return {
-        type: actionTypes.UPDATE_APP_STATE,
-        nightEnd
-    }
-}
-
-
-/*function fetchResStateSuccess(res) {
-    return {
-        type: actionTypes.FETCH_RES_STATE_SUCCESS,
-        state: res
-    }
-}*/
-
 
 function fetchStateError(error) {
     return {
@@ -138,7 +120,7 @@ function fetchStateAction() {
             const nightLen = nights.nights[nights.current].length;
             const nightStart = nights.nights[nights.current].start;
             nights.nightEnd = nightEnd(nightStart, nightLen);
-            dispatch(fetchAppStateSuccess(nights.nightEnd));
+            dispatch(actions.appStateUpdateAction(nights.nightEnd, nightStart));
             dispatch(fetchProgramsStateSuccess(res.data.programs));
             dispatch(fetchDowntimeStateSuccess(res.data.downtime, 
                 nights.nights[nights.current].start, 
