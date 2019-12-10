@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import MiniQ from './containers/miniQ/miniQ';
 import {connect}  from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Switch, Route} from 'react-router-dom';
 import instance from './axiosInstance';
-import fetchStateAction from './store/actions/fetchState';
+import fetchState from './store/actions/fetchState';
 import {appStateUpdateDispatch} from './store/actions/appState';
 import withErrorHandler from './hoc/withErrorHandler/withErrorHandler';
+import Reports, {openReport} from './Reports/Reports';
 
 
 
@@ -37,9 +39,14 @@ class App extends Component {
 
   }*/
   render() {
+
     return (
       <div>
-          <MiniQ />        
+        <Switch>
+          {/*<Route path="/report" component={Reports}/>*/}
+          <Route path="/report:id" component={Reports}/>
+          <Route path="/" component={MiniQ} />
+        </Switch>        
       </div>
     );
   }
@@ -47,7 +54,7 @@ class App extends Component {
 
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  fetchState: fetchStateAction,
+  fetchState: fetchState,
   hasNightEnded: appStateUpdateDispatch
 }, dispatch)
 

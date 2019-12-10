@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import './index.css';
 import App from './App';
+import {BrowserRouter} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 //import axios from 'axios';
 import instance from './axiosInstance';
@@ -183,7 +184,7 @@ const persister = store => {
                 //next({type:actionTypes.TEST_ACTION2});
                 const state = store.getState();
                 console.log('[Middleware] persister state after action ', state, state.nights.current + ".json");
-                var blob = new Blob([JSON.stringify(state)], {type: "text/json;charset=utf-8"});
+                var blob = new Blob([JSON.stringify(state, null, "\t")], {type: "text/json;charset=utf-8"});
                 fileSaver.saveAs(blob, state.nights.current + ".json");
             }
             return result;
@@ -258,7 +259,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(persister, thunk)));
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+ReactDOM.render(<BrowserRouter><Provider store={store}><App /></Provider></BrowserRouter>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

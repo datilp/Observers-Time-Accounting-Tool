@@ -43,6 +43,9 @@ export const hasNightEnded3 = (nights) => {
   return nightEnd < new Date();
 };
 
+export const test = () => {
+  console.log("Test has been fired");
+}
 export const hasNightEnded = (nightEnd) => {
   return getDate(nightEnd) < new Date();
 };

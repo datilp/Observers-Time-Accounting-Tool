@@ -113,10 +113,26 @@ const calculateOSTonightTime = (state, nightStart, nightEnd)  => {
   state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime = 
           (nowDate - getDate(nightStart)) - todaysDwnTonightTime;
           
-  //console.log("OSTonightTime:", nightEnd, nowDate, 
-  //    getDate(nightStart), todaysDwnTonightTime,
-  //    state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime);
+  console.log("OSTonightTime:", nightEnd, nowDate, 
+      getDate(nightStart), todaysDwnTonightTime,
+      state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime);
   
+}
+const calculateTonightTime = (downtime) => {
+  Object.keys(downtime.bins).forEach(
+    (key) => {
+      console.log(downtime.bins[key]);
+      downtime.bins[key].tonightTime = 0.0;
+      if ("interval" in downtime.bins[key]) {
+        downtime.bins[key].interval.forEach(
+          (interval) => {
+            downtime.bins[key].tonightTime += 
+            getDate(interval.stoptime) - getDate(interval.starttime);
+          }
+        )
+      }
+    }
+  );
 }
 
 const reducer = (state = init, action) => {
@@ -136,6 +152,7 @@ const reducer = (state = init, action) => {
     case actionTypes.FETCH_DWNTIME_STATE_SUCCESS:
       //console.log("[FETCH_DWNTIME_STATE_SUCCESS]", state, action.state);
       newState = { ...state, downtime: { ...action.state.downtime } };
+      calculateTonightTime(newState.downtime);
       calculateOSTonightTime(newState, action.nightStart, action.nightEnd);
       return newState;
     case actionTypes.CALC_OS_TNTIME:

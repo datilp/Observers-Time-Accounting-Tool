@@ -99,6 +99,20 @@ const endIntervalState = (state, action) => {
   return newState;
 };
 
+const calculateTonightTime = (programs) => {
+  Object.keys(programs.bins).forEach(
+    (key) => {
+      programs.bins[key].tonightTime = 0.0;
+      programs.bins[key].interval.forEach(
+        (interval) => {
+          programs.bins[key].tonightTime += 
+          getDate(interval.stoptime) - getDate(interval.starttime);
+        }
+      )
+    }
+  );
+}
+
 const reducer = (state = init, action) => {
   let newState = null;
   //console.log("action.type is:", action.type);
@@ -111,6 +125,7 @@ const reducer = (state = init, action) => {
     case actionTypes.FETCH_PROGRAMS_STATE_SUCCESS:
       //console.log("[FETCH_DWNTIME_STATE_SUCCESS]", action.state.downtime.currentAction);
       newState = { ...state, programs: { ...action.state.programs } };
+      calculateTonightTime(newState.programs);
       return newState;
     default:
       return state;

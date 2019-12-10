@@ -26,3 +26,8 @@ export {
 export {
     appStateUpdateAction
 } from './appState';
+
+export {
+    fetchStateAction,
+    fetchStateError
+} from './fetchState';

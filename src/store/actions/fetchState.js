@@ -48,10 +48,17 @@ function fetchProgramsStateSuccess(programs) {
     }
 }
 
-function fetchStateError(error) {
+export function fetchStateError(error) {
     return {
         type: actionTypes.FETCH_STATE_ERROR,
         error: error
+    }
+}
+
+export function fetchStateAction(dateRange) {
+    return {
+        type: actionTypes.FETCH_STATE,
+        dateRange
     }
 }
 
@@ -88,11 +95,15 @@ function fetchStateError(error) {
     }
 }*/
 
-function fetchStateAction() {
-    //console.log("in fetchStateAction");
+function fetchState(dateRange) {
+    console.log("in fetchStateAction:" + dateRange);
+    //dateRange="20191104-20191105";
+    //dateRange="20191116-20191117";
+
+    var url = dateRange==null?"/getstate.pl":"/getstate.pl?dateRange=" + dateRange;
     return dispatch => {
         dispatch(fetchStatePending());
-        instance.get('/getstate.pl',
+        instance.get(url,
         {
             transformResponse: [(response) => (JSON.parse(response))]
         }
@@ -120,6 +131,8 @@ function fetchStateAction() {
             const nightLen = nights.nights[nights.current].length;
             const nightStart = nights.nights[nights.current].start;
             nights.nightEnd = nightEnd(nightStart, nightLen);
+            console.log("fetch:NightStart:", nightStart, "; nightLen:", nightLen, "; nightEnd:", nightEnd);
+
             dispatch(actions.appStateUpdateAction(nights.nightEnd, nightStart));
             dispatch(fetchProgramsStateSuccess(res.data.programs));
             dispatch(fetchDowntimeStateSuccess(res.data.downtime, 
@@ -141,4 +154,4 @@ function fetchStateAction() {
     }
 }
 
-export default fetchStateAction;
+export default fetchState;
