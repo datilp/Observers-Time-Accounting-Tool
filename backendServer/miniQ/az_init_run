@@ -3,7 +3,7 @@ $VAR1 = {
                                  'WEAHTERLOSS' => 0.0,
                                  'POORWEATHER' => 0.0,
                                  'TECHDOWNTIME' => 0.0,
-                                 'CALIBRATION' => 0.0 ,
+                                 'CALIBRATION' => 0.0,
                                  'OPENSHUTTER' => 0.0,
                                  'AZ-2019B-147' => 0.0,
                                  'AZ-2019B-006' => 0.0,
@@ -58,7 +58,7 @@ $VAR1 = {
                                           'bins' => {}
                                         }
                         },
-          'nights' => {
+'nights' => {
                         'current' => undef,
                         'nights' => {
                                       '20191028-20191029' => {

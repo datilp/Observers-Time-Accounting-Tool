@@ -20,7 +20,7 @@ if (defined($cgi->param('POSTDATA'))) {
   open ($state_fh, ">", $state_file_temp) || die "Can't open $state_file_temp:$!";
   #flock($state_fh, LOCK_EX) or die "Could not lock '$state_file_temp':$!";
   
-  print $state_fh encode_json($content);
+  print $state_fh JSON->new->pretty->encode($content);
   
   close $state_fh;
   
