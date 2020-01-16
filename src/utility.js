@@ -106,3 +106,21 @@ export const isOpenShutterOn = (downtime, hasNightEnded) => {
     return false;
   }
 };
+
+export const monthNamesLong = () => {
+  return [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+  ];
+}
+
+export const monthNamesShort = () => {
+  return [
+    "Jan", "Feb", "Mar",
+    "Apr", "May", "Jun", "Jul",
+    "Aug", "Sep", "Oct",
+    "Nov", "Dec"
+  ];
+}
