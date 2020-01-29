@@ -8,28 +8,51 @@ import NTimer from "../../NTimer/NTimer";
 //import * as actionTypes from "../../../store/actions/actionTypes";
 import {getDate} from "../../../utility";
 import * as actionCreators from "../../../store/actions/index";
+import * as actionTypes from "../../../store/actions/actionTypes"
+import editImg from '../../../assets/images/edit3.png';
+import Modal from "../../UI/Modal/Modal";
+import IntervalGridEditor from "../../IntervalGridEditor/IntervalGridEditor";
+
+
+
 
 class ProgramTrackerRow extends Component {
   state = {
-    startTimer: false
+    startTimer: false,
+    editing:false
   };
 
-startClock = (props) => {
+  startClock = (props) => {
 
-  //if the night has ended disable buttons
-  if (props.appState.isEndOfNight) { 
-    return null;
+    //if the night has ended disable buttons
+    if (props.appState.isEndOfNight || !props.appState.isStartOfNight) { 
+      return null;
+    }
+
+    this.setState({startTimer: true});
+    //console.log("actionTypeStart:", props.actionTypeStart);
+    return props.startTimer(props.pid);
   }
 
-  this.setState({startTimer: true});
-  //console.log("actionTypeStart:", props.actionTypeStart);
-  return props.startTimer(props.pid);
-}
+  stopTimer = (props) => {
+    this.setState({startTimer: false});
+    return props.stopTimer(props.pid);
+  }
+  editHandler = () => {
+    //console.log("***edit handler");
+    this.setState({editing:true});
+  }
+  
+  closeEditing = () => {
+    //console.log("***close editing");
+    this.setState({editing:false})
+  }
 
-stopTimer = (props) => {
-  this.setState({startTimer: false});
-  return props.stopTimer(props.pid);
-}
+  editInterval = () => {
+    
+  }
+
+
   render() {
     //console.log("[ProgramTrackerRow]", this.props);
     var tonightTime=0;
@@ -57,18 +80,34 @@ stopTimer = (props) => {
     //          <Timer initSeconds={totalRunningTime} isActive={false}/>
 
     return (
-      <tr className={classes.PTR}>
+      [<tr key="a">
+        <td>
+          
+          <Modal show={this.state.editing} modalClosed={this.closeEditing}>
+            <IntervalGridEditor
+              key={this.props.id + this.props.nights.current}
+              binType={actionTypes.PROGRAM_TYPE}
+              closeEditing={this.closeEditing}
+              pid={this.props.pid} 
+              bin={this.props.prog.bins[this.props.pid]}/>
+           </Modal>
+        </td>
+      </tr>,
+      <tr className={classes.PTR} key="b">
         <td style={{width:"200px"}} key="1">{this.props.rowName}</td>
         <td style={{width:"90px"}} key="2">
            {(this.state.startTimer || this.props.prog.currentInterval !=null) && 
                 this.props.prog.currentProgramID === this.props.pid?
             <NTimer 
               initDate={getDate(this.props.prog.currentInterval.starttime)} 
-              isActive={true}/>
+              isActive={true}
+              step={1}/>
             : null}
-
         </td>
         {button}
+        <td key="80">
+          <button onClick={this.editHandler}><img src={editImg} alt={"edit time interval"}/></button>
+        </td>
         {/* Tonight(h) */}
         <td key="5" className={classes.box}>
           <label>
@@ -98,6 +137,7 @@ stopTimer = (props) => {
           .toFixed(3) + "%"}</label>
         </td>
       </tr>
+      ]
     );
   }
 }
@@ -114,10 +154,28 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
   return {
     startTimer: (thisPrgID) => {
-      dispatch(actionCreators.prgBinStartAction(thisPrgID))
+      dispatch(actionCreators.prgBinStartAction(thisPrgID));
+/*
+      if (type === actionTypes.PROGRAM_TYPE) {
+        dispatch(actionCreators.prgBinStartAction(thisPrgID));
+      } else if (type === actionTypes.POORWEATHER_TYPE) {
+        dispatch(actionCreators.prgDWTBinStartAction(thisPrgID, actionTypes.POORWTHPROG));
+      } else if (type === actionTypes.BACKUP_TYPE) {
+        dispatch(actionCreators.prgDWTBinStartAction(thisPrgID, actionTypes.BACKUPPROG));
+      }
+      */ 
     },
     stopTimer: (thisPrgID) => {
-      dispatch(actionCreators.prgBinStopAction(thisPrgID))
+      dispatch(actionCreators.prgBinStopAction(thisPrgID));
+
+/*      if (type === actionTypes.PROGRAM_TYPE) {
+        dispatch(actionCreators.prgBinStopAction(thisPrgID));
+      } else if (type === actionTypes.POORWEATHER_TYPE) {
+        dispatch(actionCreators.prgDWTBinStopAction(thisPrgID, actionTypes.POORWTHPROG));
+      } else if (type === actionTypes.BACKUP_TYPE) {
+        dispatch(actionCreators.prgDWTBinStopAction(thisPrgID, actionTypes.BACKUPPROG));
+      }
+      */
     }
   };
 };

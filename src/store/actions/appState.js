@@ -13,7 +13,7 @@ export const appStateUpdateDispatch = ( ) => {
         const state0 = getState();
         const nights = state0.nights;
 
-        //console.log("appStateUpdateDispatch:", state0.appState);
+        //console.log("appStateUpdateDispatch:", state0.appState,nights.current, nights);
         dispatch(appStateUpdateAction(nights.nightEnd, nights.nights[nights.current].start));
         const state1 = getState();
         //console.log("appStateUpdateDispatch2:", state1.appState);

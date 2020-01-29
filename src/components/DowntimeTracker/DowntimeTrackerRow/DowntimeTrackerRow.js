@@ -5,20 +5,24 @@ import Button from "../../UI/Button/Button";
 import {connect} from 'react-redux';
 //import Clock from "../../Clock/Clock";
 import NTimer from "../../NTimer/NTimer";
-
 import * as actionTypes from "../../../store/actions/actionTypes";
 import {getDate,isOpenShutterOn} from "../../../utility";
 import * as actionCreators from "../../../store/actions/index";
+import editImg from '../../../assets/images/edit3.png';
+import Modal from "../../UI/Modal/Modal";
+import IntervalGridEditor from "../../IntervalGridEditor/IntervalGridEditor";
+
 
 class DowntimeTrackerRow extends Component {
   state = {
-      startTimer: false
+      startTimer: false,
+      editing:false
     };
 
   startClock = (props) => {
     //if the night has ended disable buttons
-    if (props.appState.isEndOfNight  
-    && props.binType !== actionTypes.CALIBRATION) {
+    if (props.appState.isEndOfNight || !props.appState.isStartOfNight) { 
+    //&& props.binType !== actionTypes.CALIBRATION) {
       return null;
     }
 
@@ -39,7 +43,18 @@ class DowntimeTrackerRow extends Component {
        bins[actionTypes.OPENSHUTTER].tonightTime/1000;
   }
 
+  editHandler = () => {
+    //console.log("***edit handler");
+    this.setState({editing:true});
+  }
+  
+  closeEditing = () => {
+    //console.log("***close editing");
+    this.setState({editing:false})
+  }
+
   render() {
+    //console.log("DowntimeTrackerRow", this.props.dwt);
     var tonightTime=0;
     if (this.props.dwt.downtime.bins !=null && this.props.dwt.downtime.bins[this.props.binType]) {
       tonightTime=this.props.dwt.downtime.bins[this.props.binType].tonightTime/1000;
@@ -57,8 +72,22 @@ class DowntimeTrackerRow extends Component {
     } else {
       button = [<td key={genKey(Math.random())}></td>];
     }
-       return (
-      <tr className={classes.DTR}>
+    return (
+        [<tr key="a">
+          <td key="69">
+            
+            <Modal show={this.state.editing} modalClosed={this.closeEditing}>
+              <IntervalGridEditor
+                key={this.props.binType + this.props.nights.current}
+                binType="downtime"
+                closeEditing={this.closeEditing}
+                pid={this.props.binType} 
+                //bins={_bins}
+                bin={this.props.dwt.downtime.bins[this.props.binType]}/>
+             </Modal>
+          </td>
+        </tr>,
+      <tr className={classes.DTR} key="b">
         <td style={{width:"190px"}} key={genKey(Math.random())}>{this.props.rowName}</td>
         <td style={{width:"90px"}} key={genKey(Math.random())}>
             {(this.state.startTimer || this.props.dwt.downtime.currentInterval !=null) && 
@@ -66,14 +95,19 @@ class DowntimeTrackerRow extends Component {
             <NTimer initDate={getDate(this.props.dwt.downtime.currentInterval.starttime)} isActive={true} step={1}/>: null}
         </td>
         {button}
+        <td key="80">
+          {(this.props.editable)?
+          <button onClick={this.editHandler}><img src={editImg} alt={"edit time intervals"}/></button>:
+          null
+          }
+        </td>
         <td key={genKey(Math.random())} className={classes.box}>
-          <label>{/*this.props.binType === actionTypes.OPENSHUTTER?
-            parseFloat(this.openShutterTonight()).toFixed(3) : 
-          parseFloat(tonightTime).toFixed(3)*/}
+          <label>
             {
             this.props.binType === actionTypes.OPENSHUTTER?
             <NTimer initSeconds={this.openShutterTonight()}
-            isActive={isOpenShutterOn(this.props.dwt.downtime, this.props.appState.isEndOfNight)}/> : 
+            isActive={isOpenShutterOn(this.props.dwt.downtime, this.props.prog, !this.props.appState.isEndOfNight &&
+              this.props.appState.isStartOfNight)}/> : 
             <NTimer initSeconds={tonightTime} isActive={false}/>
             }
             </label>
@@ -84,7 +118,8 @@ class DowntimeTrackerRow extends Component {
               this.props.binType === actionTypes.OPENSHUTTER?
               <NTimer initSeconds={this.props.totals.running_totals[this.props.binType]==null?
                 0.0:this.props.totals.running_totals[this.props.binType]*60*60} 
-                isActive={isOpenShutterOn(this.props.dwt.downtime, this.props.appState.isEndOfNight)}/>
+                isActive={isOpenShutterOn(this.props.dwt.downtime, this.props.prog, !this.props.appState.isEndOfNight &&
+                  this.props.appState.isStartOfNight)}/>
               :
               <NTimer initSeconds={this.props.totals.running_totals[this.props.binType]==null?
                 0.0:this.props.totals.running_totals[this.props.binType]*60*60} isActive={false}/>
@@ -92,19 +127,15 @@ class DowntimeTrackerRow extends Component {
             }
           </label>
         </td>
-        {/*<td key={genKey(Math.random())} className={[classes.box].join(" ")}>
-          <label>45</label>
-        </td>
-        <td key={genKey(Math.random())} className={classes.box}>
-          <label></label>
-            </td>*/}
       </tr>
+        ]
     );
   }
 }
 const mapStateToProps = state => {
   return {
     dwt: state.downtime,
+    prog: state.programs.programs,
     nights: state.nights,
     totals: state.totals,
     appState: state.appState

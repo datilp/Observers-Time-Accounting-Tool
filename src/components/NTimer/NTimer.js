@@ -39,7 +39,7 @@ import classes from './NTimer.module.css';
       }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       if (this.props.initDate !== nextProps.initDate) {
         clearInterval(this.interval);
         if (nextProps.debug) {

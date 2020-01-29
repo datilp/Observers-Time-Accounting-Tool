@@ -1,21 +1,60 @@
 import React, { Component } from "react";
 import classes from "./ProgramTracker.module.css";
 import {connect} from 'react-redux';
+import Aux from '../../hoc/Aux/Aux';
 import PTR from "./ProgramTrackerRow/ProgramTrackerRow";
+//import Modal from "../UI/Modal/Modal";
+//import IntervalGridEditor from "../IntervalGridEditor/IntervalGridEditor";
 
 class ProgramTracker extends Component {
 
-  render() {
-      const programRows = this.props.prog.list.map(prog => {
+  constructor(props) {
+    super(props);
+    this.state = {open:true, editing:false}
+    this.togglePanel = this.togglePanel.bind(this);
+  }
 
-        return <PTR key={prog.id} pid={prog.id} rowName={[prog.id, prog.pi].join(" ")} />;
-      })
+  
+  togglePanel(e) {
+    this.setState({open:!this.state.open})
+  }
+
+  editHandler = () => {
+    console.log("***edit handler");
+    this.setState({editing:true});
+  }
+  
+  cancelEditing = () => {
+    console.log("***cancel purchase");
+    this.setState({editing:false})
+  }
+ 
+  render() {
+    const programRows = this.props.prog.list.filter(prog=>{
+      return prog.class === this.props.progClass
+    }).map((prog) => {
+        return <PTR 
+                  progClass={this.props.progClass}
+                  editHandler={this.editHandler} 
+                  key={prog.id}
+                  pid={prog.id} 
+                  rowName={[prog.id, prog.pi].join(" ")} />;
+    })
     return (
-      <div className={classes.ProgramTracker}>
+      <Aux>
+        {/*<Modal show={this.state.editing} modalClosed={this.cancelEditing}>
+            <IntervalGridEditor/>
+    </Modal>*/}
+      <div onClick={(e) => this.togglePanel(e)} className={classes.Header}>
+        {this.props.title}
+      </div>
+      {this.state.open ? 
+      (<div className={classes.ProgramTracker}>
         <table>
             <tbody>
           <tr>
             <th colSpan="3"></th>
+            <th></th>
             <th>Tonight(h)</th>
             <th>Total(h)</th>
             {/*<th>Tonight(%)</th>
@@ -25,7 +64,8 @@ class ProgramTracker extends Component {
           {programRows}
           </tbody>
         </table>
-      </div>
+      </div>):null}
+      </Aux>
     );
   }
 }

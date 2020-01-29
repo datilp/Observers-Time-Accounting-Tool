@@ -24,6 +24,15 @@ export const binStopDispatch = (key, nightStart, nightEnd) => {
     };
 };
 
+export const dwtBinUpdateDispatch = (key, interval) => {
+    return {
+        type: actionTypes.DOWNTIME_UPDATE,
+        key: key,
+        interval: interval
+    };
+};
+
+
 export const updateOSTNTimeAction = (nightStart,nightEnd) => {
     return {
         type: actionTypes.CALC_OS_TNTIME,
@@ -31,6 +40,25 @@ export const updateOSTNTimeAction = (nightStart,nightEnd) => {
         nightEnd
     }
 };
+
+export const updatePoorWeatherAction = (intervals, nightStart, nightEnd) => {
+    return {
+        type: actionTypes.UPDATE_POORWEATHER,
+        intervals,
+        nightStart,
+        nightEnd
+    }
+};
+
+export const updateBackupAction = (intervals, nightStart, nightEnd) => {
+    return {
+        type: actionTypes.UPDATE_BACKUP,
+        intervals,
+        nightStart,
+        nightEnd
+    }
+};
+
 
 export const dwnBinStartAction = (thisBin) => {
     return (dispatch, getState) => {
@@ -74,6 +102,9 @@ export const dwnBinStopAction = (thisBin) => {
     return (dispatch, getState) => {
         const {downtime} = getState().downtime;
         const nights = getState().nights;
+        const oldTonightTime = downtime.bins[thisBin]==null?
+                                        0.0:
+                                        downtime.bins[thisBin].tonightTime;
 
         // if currentInterval is set and currentBin is this bin
         if (downtime.currentInterval != null &&
@@ -83,10 +114,30 @@ export const dwnBinStopAction = (thisBin) => {
                     nights.nights[nights.current].start,
                     nights.nightEnd));
                 //calculate totals on old bin
-                dispatch(actionCreators.dwnUpdateTotalsAction(downtime.currentBin));
+                dispatch(actionCreators.dwnUpdateTotalsAction(downtime.currentBin,  oldTonightTime));
                 //persists state
                 dispatch(actionCreators.persistState());
 
         }
+    }
+};
+
+export const dwnBinUpdateAction = (thisBin, intervals) => {
+    return (dispatch, getState) => {
+        const {downtime} = getState().downtime;
+        const nights = getState().nights;
+        const oldTonightTime = downtime.bins[thisBin]==null?
+                                        0.0:
+                                        downtime.bins[thisBin].tonightTime;
+        console.log("[dwtBinUpdateDispatch]:", thisBin, intervals);
+        //stop old bin
+        dispatch(dwtBinUpdateDispatch(thisBin, intervals,
+            nights.nights[nights.current].start,
+            nights.nightEnd));
+        //calculate totals on old bin
+        console.log("[dwnBinUpdateAction]:dwnUpdateTotalsAction");
+        dispatch(actionCreators.dwnUpdateTotalsAction(thisBin, oldTonightTime));
+        //persists state
+        dispatch(actionCreators.persistState());
     }
 };

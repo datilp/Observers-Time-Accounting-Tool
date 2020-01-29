@@ -25,7 +25,7 @@ class NavigationItems extends Component {
 
     getNight = (func, dateRange) => {
         return () => {
-            console.log("getNight:" + dateRange);
+            //console.log("getNight:" + dateRange);
             func(dateRange);
         }
     }
@@ -33,7 +33,7 @@ class NavigationItems extends Component {
     openReport = (currentDate) => {
 
         return () => {
-            const url = "http://" + window.location.host + "/report" + currentDate;
+            const url = "http://" + window.location.host + "/miniQ/report" + currentDate;
             window.open(url, '_blank');
         }
     }
@@ -46,7 +46,6 @@ class NavigationItems extends Component {
         var timer = "";
         var nightsList = Object.keys(this.props.nights.nights).sort();
         var currentIndex = nightsList.findIndex(key => key === this.props.nights.current);
-        var nightsListLen = nightsList.length;
         var prevNight = nightsList[currentIndex -1];
         var nextNight = nightsList[currentIndex +1];
         if (nextNight == null) {
@@ -66,14 +65,14 @@ class NavigationItems extends Component {
             //console.log("NavItems: NightStart:" + this.props.nights.nights[this.props.nights.current].start);
             timer = 
             <Aux>
-            <label>&nbsp;&nbsp;<b>{"Starts in:"}&nbsp;&nbsp;</b></label>
-            <label><b>
-            <NTimer 
-            initDate={getDate(this.props.nights.nights[this.props.nights.current].start)} 
-            isActive={true}
-            step={-1}
-            debug={true}/>
-            </b></label>
+                <label>&nbsp;&nbsp;<b>{"Starts in:"}&nbsp;&nbsp;</b></label>
+                <label>
+                    <b><NTimer 
+                    initDate={getDate(this.props.nights.nights[this.props.nights.current].start)} 
+                    isActive={true}
+                    step={-1}
+                    debug={true}/></b>
+                </label>
             </Aux>;
         } else if (this.props.state.isEndOfNight) {
             timer = <label><b>&nbsp;&nbsp;{"Night has ended"}</b></label>;
@@ -81,14 +80,14 @@ class NavigationItems extends Component {
             //console.log("nightsEnd:", this.props.nights.nightEnd, (new Date() - getDate(this.props.nights.nightEnd))/1000);
             timer =
             <Aux>
-            <label>&nbsp;&nbsp;<b>{"Ends in:"}&nbsp;&nbsp;</b></label>
-            <label><b>
-            <NTimer 
-            initDate={getDate(this.props.nights.nightEnd)} 
-            isActive={true}
-            step={-1}
-            debug={true}/>
-            </b></label>
+                <label>&nbsp;&nbsp;<b>{"Ends in:"}&nbsp;&nbsp;</b></label>
+                <label><b>
+                    <NTimer 
+                        initDate={getDate(this.props.nights.nightEnd)} 
+                        isActive={true}
+                        step={-1}
+                        debug={true}/>
+                </b></label>
             </Aux>;
     
         }

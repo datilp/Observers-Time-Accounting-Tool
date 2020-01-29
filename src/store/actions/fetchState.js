@@ -96,9 +96,9 @@ export function fetchStateAction(dateRange) {
 }*/
 
 function fetchState(dateRange) {
-    console.log("in fetchStateAction:" + dateRange);
+    //console.log("in fetchStateAction:" + dateRange);
     //dateRange="20191104-20191105";
-    //dateRange="20191116-20191117";
+    //dateRange="20200123-20200124";
 
     var url = dateRange==null?"/getstate.pl":"/getstate.pl?dateRange=" + dateRange;
     return dispatch => {
@@ -120,10 +120,9 @@ function fetchState(dateRange) {
                 console.log("Error fetching json:", res);
                 throw(res.error);
             }
-           //console.log("fetching1:", res);
-
+            //console.log("fetching1:", res);
+            // console.log("fetching:", res.data);
             dispatch(fetchStateSuccess(res.data));
-            //console.log("fetching:", res.data);
 
             //calculating nights end.
             const nights = res.data.nights;
@@ -131,7 +130,8 @@ function fetchState(dateRange) {
             const nightLen = nights.nights[nights.current].length;
             const nightStart = nights.nights[nights.current].start;
             nights.nightEnd = nightEnd(nightStart, nightLen);
-            console.log("fetch:NightStart:", nightStart, "; nightLen:", nightLen, "; nightEnd:", nightEnd);
+            //console.log("fetch:NightStart:", nightStart, "; nightLen:", nightLen, "; nightEnd:", nightEnd);
+            //console.log("fetch:programs:", res.data);
 
             dispatch(actions.appStateUpdateAction(nights.nightEnd, nightStart));
             dispatch(fetchProgramsStateSuccess(res.data.programs));

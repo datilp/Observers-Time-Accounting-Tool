@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost/cgi-bin'
+    baseURL: '/cgi-bin/miniQ'
+//    baseURL: 'http://localhost/cgi-bin/miniQ'
+
     //baseURL: 'http://pit.lbto.org/cgi-bin/miniQ'
 
 });

@@ -1,5 +1,5 @@
 import * as actionsTypes from '../actions/actionTypes';
-import {getDate, hasNightEnded, hasNightStarted} from '../../utility';
+import {hasNightEnded, hasNightStarted} from '../../utility';
 
 const init = {
     isEndOfNight:false
@@ -9,6 +9,7 @@ const appState = (state=init, action) => {
     var newState = state;
     switch(action.type) {
         case actionsTypes.UPDATE_APP_STATE:
+            //console.log("night state:", state, action);
             const isEndOfNight = hasNightEnded(action.nightEnd);
             const isStartOfNight = hasNightStarted(action.nightStart);
            

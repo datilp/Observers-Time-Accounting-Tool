@@ -35,6 +35,37 @@ const reducer = (state = init, action) => {
         newState.running_totals[action.key] = 0;
       }
 
+      var agregatedIntervalTime = 0.0;
+      //console.log("UPDATE_TOTALS REDUCER][intervals]", action.intervals);
+      if (action.intervals != null) {
+        if (Array.isArray(action.intervals)) {
+          action.intervals.map( interval => {
+            agregatedIntervalTime += (getDate(interval.stoptime) 
+            - getDate(interval.starttime));
+            return null;
+          } );  
+        } else {
+          //console.log("[Totals reducer][UPDATE_TOTALS]:", action.intervals);
+          agregatedIntervalTime += (getDate(action.intervals.stoptime) 
+            - getDate(action.intervals.starttime));  
+        }
+      }
+
+      //To the running totals we subtract the old tonight time and 
+      //add the new interval aggregated time.      
+      newState.running_totals[action.key] += 
+        (agregatedIntervalTime / (1000 * 60 * 60)) - action.oldTonightTime/(1000*60*60);
+
+        /*console.log("UPDATE_TOTALS OldTonighttime:", action.oldTonightTime,
+        "OldTonightTime hrs:", action.oldTonightTime/(1000*60*60),
+        "aggregatedIntervalTime:", agregatedIntervalTime,
+        "aggregatedIntervalTime Hrs:", agregatedIntervalTime/(1000*60*60),
+        "OldrunningTotal:", oldRunningTotal,
+        "newTotalTime:", newState.running_totals[action.key]);*/
+      
+      updateOpenShutterTotalTime(newState, action.ostime);
+
+      /*
       var deltatime = (getDate(action.interval.stoptime) 
               - getDate(action.interval.starttime));
 
@@ -42,6 +73,7 @@ const reducer = (state = init, action) => {
         deltatime / (1000 * 60 * 60);
       
       updateOpenShutterTotalTime(newState, action.ostime);
+      */
       //console.log("TOTALS:", action.ostime, action.deltatime, state, newState);
       return newState;
     case actionTypes.FETCH_TOTALS_STATE_SUCCESS:

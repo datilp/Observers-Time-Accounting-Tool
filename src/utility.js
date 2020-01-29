@@ -89,7 +89,28 @@ export const nightLenTillNow = (nights) => {
   return  totalNightsLenTillYesterday + tonight;
 };
 
-export const isOpenShutterOn = (downtime, hasNightEnded) => {
+export const isOpenShutterOn = (downtime, programs, isNightOn) => {
+  
+  if (((downtime.currentBin != null //i.e. there is something running
+    &&
+    [
+      actionTypes.WEATHERLOSS,
+      actionTypes.POORWTHPROG,
+      actionTypes.TECHDOWNTIME
+    ].includes(downtime.currentBin)) ||
+    ( programs.currentProgramID !=null 
+    && programs.bins[programs.currentProgramID].progClass === actionTypes.POORWEATHER_TYPE))
+    // and is one of these.
+    && isNightOn) {
+    return false;
+  } else if (isNightOn) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const isOpenShutterOn2 = (downtime, hasNightEnded) => {
   //console.log(downtime.currentBin, hasNightEnded);
   if ( downtime.currentBin != null 
     &&
@@ -106,6 +127,7 @@ export const isOpenShutterOn = (downtime, hasNightEnded) => {
     return false;
   }
 };
+
 
 export const monthNamesLong = () => {
   return [

@@ -17,6 +17,7 @@ import progReducer from './store/reducers/programs';
 import appStateReducer from './store/reducers/appState';
 
 import * as actionTypes from './store/actions/actionTypes';
+import "react-datepicker/dist/react-datepicker.css";
 import fileSaver from 'file-saver';
 
 

@@ -1,13 +1,17 @@
 export {
     testAction,
     updateOSTNTimeAction,
+    updatePoorWeatherAction,
+    updateBackupAction,
     dwnBinStartAction,
-    dwnBinStopAction
+    dwnBinStopAction,
+    dwnBinUpdateAction
 } from './downtime';
 
 export {
     prgBinStartAction,
-    prgBinStopAction
+    prgBinStopAction,
+    prgBinUpdateAction
 } from './programs';
 
 export {

@@ -86,6 +86,93 @@ const endIntervalState = (state, action) => {
   return newState;
 };
 
+const addIntervalToBinAction = (state, action, bin_type) => {
+  //console.log("[addIntervalToBinAction]", state, action, bin_type);
+  let newState = {
+    ...state,
+    downtime: {
+      ...state.downtime,
+      bins: { ...state.downtime.bins }
+    }
+  };
+
+  let newBin =
+      newState.downtime.bins[bin_type] == null
+        ? { [bin_type]: { interval: [], tonightTime: 0 } }
+        : {
+            [bin_type]: {
+              ...newState.downtime.bins[bin_type],
+              interval: newState.downtime.bins[bin_type].interval.slice()
+            }
+          };
+
+    newState.downtime.bins = { ...newState.downtime.bins, ...newBin };
+
+    newState.downtime.bins[bin_type].interval = action.intervals;
+    /*if (Array.isArray(action.interval)) {
+      action.interval.map(elem => {
+        newState.downtime.bins[bin_type].interval.push(elem);
+      })
+    } else {
+      newState.downtime.bins[bin_type].interval.push(action.interval);
+    }*/
+    /*action.interval.map(elem => {
+      newState.downtime.bins[bin_type].interval.push(elem)
+    });*/
+    
+    //newState.downtime.bins[bin_type].interval = [...action.interval];
+
+    var tonightTime = 0.0;
+    newState.downtime.bins[bin_type].interval.forEach(interval => {
+      tonightTime +=
+        getDate(interval.stoptime).getTime() -
+        getDate(interval.starttime).getTime();
+    });
+    newState.downtime.bins[bin_type].tonightTime = tonightTime;
+    //console.log("estoy aqui!!", newState);
+
+    return newState;
+};
+
+const updateBinWithIntervalListAction = (state, action, bin_type) => {
+  //console.log("[addIntervalToBinAction]", state, action, bin_type);
+  let newState = {
+    ...state,
+    downtime: {
+      ...state.downtime,
+      bins: { ...state.downtime.bins }
+    }
+  };
+
+  let newBin =
+      newState.downtime.bins[bin_type] == null
+        ? { [bin_type]: { interval: [], tonightTime: 0 } }
+        : {
+            [bin_type]: {
+              ...newState.downtime.bins[bin_type],
+              interval: newState.downtime.bins[bin_type].interval.slice()
+            }
+          };
+
+    newState.downtime.bins = { ...newState.downtime.bins, ...newBin };
+
+    /*newState.downtime.bins[bin_type].interval.push(
+      action.interval
+    );*/
+
+    newState.downtime.bins[bin_type].interval = [...action.interval];
+
+    var tonightTime = 0.0;
+    newState.downtime.bins[bin_type].interval.forEach(interval => {
+      tonightTime +=
+        getDate(interval.stoptime).getTime() -
+        getDate(interval.starttime).getTime();
+    });
+    newState.downtime.bins[bin_type].tonightTime = tonightTime;
+    return newState;
+};
+
+
 const calculateOSTonightTime = (state, nightStart, nightEnd)  => {
   var todaysDwnTonightTime = 0;
   //tonightTime is in seconds
@@ -110,18 +197,23 @@ const calculateOSTonightTime = (state, nightStart, nightEnd)  => {
   //if current time is later than end of night then use end of night (nightEnd)
   const nowDate = nightEnd < new Date()? nightEnd: new Date();
 
+  if (getDate(nightStart)< nowDate) {
   state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime = 
           (nowDate - getDate(nightStart)) - todaysDwnTonightTime;
+  } else {
+    state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime = 0.0;
+
+  }
           
-  console.log("OSTonightTime:", nightEnd, nowDate, 
+  /*console.log("OSTonightTime:", nightEnd, nowDate, 
       getDate(nightStart), todaysDwnTonightTime,
-      state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime);
+      state.downtime.bins[actionTypes.OPENSHUTTER].tonightTime);*/
   
 }
 const calculateTonightTime = (downtime) => {
   Object.keys(downtime.bins).forEach(
     (key) => {
-      console.log(downtime.bins[key]);
+      //console.log(downtime.bins[key]);
       downtime.bins[key].tonightTime = 0.0;
       if ("interval" in downtime.bins[key]) {
         downtime.bins[key].interval.forEach(
@@ -154,7 +246,10 @@ const reducer = (state = init, action) => {
       newState = { ...state, downtime: { ...action.state.downtime } };
       calculateTonightTime(newState.downtime);
       calculateOSTonightTime(newState, action.nightStart, action.nightEnd);
+      //console.log("[FETCH_DWNTIME_STATE_SUCCESS]", newState, action.state.downtime);
       return newState;
+    case actionTypes.DOWNTIME_UPDATE:
+      return updateBinWithIntervalListAction(state, action, action.key);    
     case actionTypes.CALC_OS_TNTIME:
       newState = {...state, 
         downtime: {
@@ -165,6 +260,20 @@ const reducer = (state = init, action) => {
       calculateOSTonightTime(newState, action.nightStart, action.nightEnd);
 
       return newState;
+    case actionTypes.UPDATE_POORWEATHER:
+      //I get an interval payload comming from one of the poorweather programs 
+      //in the action structure.
+      // We simply add that interval to the POORWEATHER bin
+      newState = addIntervalToBinAction(state, action, actionTypes.POORWTHPROG);
+      calculateOSTonightTime(newState, action.nightStart, action.nightEnd);
+      return newState;
+
+      //return state;
+    case actionTypes.UPDATE_BACKUP:
+      //I get an interval payload comming from one of the backup programs 
+      // in the action structure.
+      // We simply add that interval to the BACKUP bin
+      return addIntervalToBinAction(state, action, actionTypes.BACKUPPROG);
     case actionTypes.TEST_ACTION:
       console.log("Triggered ", actionTypes.TEST_ACTION);
       return state;
